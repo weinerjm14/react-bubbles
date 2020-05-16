@@ -11,6 +11,7 @@ const ColorList = ({ props, colors, getColors }) => {
   console.log(colors);
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+  const [newcolor, setNewColor] = useState(initialColor);
   const history = useHistory();
   const editColor = color => {
     setEditing(true);
@@ -37,6 +38,16 @@ const ColorList = ({ props, colors, getColors }) => {
         getColors();
       })
       .catch(err => console.log("delete error: ", err));
+  };
+
+  const saveNewColor = e => {
+    e.preventDefault();
+    AxiosWithAuth()
+      .post(`/colors`, newcolor)
+      .then(res => {
+        getColors();
+      })
+      .catch(err => console.log("Edit Error: ", err));
   };
 
   return (
@@ -94,8 +105,32 @@ const ColorList = ({ props, colors, getColors }) => {
           </div>
         </form>
       )}
-      <div className="spacer" />
-      {/* stretch - build another form here to add a color */}
+
+      <form onSubmit={saveNewColor}>
+        <legend>add color</legend>
+        <label>
+          color name:
+          <input
+            onChange={e => setNewColor({ ...newcolor, color: e.target.value })}
+            value={newcolor.color}
+          />
+        </label>
+        <label>
+          hex code:
+          <input
+            onChange={e =>
+              setNewColor({
+                ...newcolor,
+                code: { hex: e.target.value },
+              })
+            }
+            value={newcolor.code.hex}
+          />
+        </label>
+        <div className="button-row">
+          <button type="submit">save</button>
+        </div>
+      </form>
     </div>
   );
 };
