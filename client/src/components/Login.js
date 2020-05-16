@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { axiosWithAuth } from "../utils/AxiosWithAuth";
+import { AxiosWithAuth } from "../utils/AxiosWithAuth";
 
 const Login = props => {
   const [creds, setCreds] = useState({
@@ -16,7 +16,7 @@ const Login = props => {
   const login = e => {
     e.preventDefault();
     console.log(creds);
-    axiosWithAuth()
+    AxiosWithAuth()
       .post("/login", creds)
       .then(res => {
         localStorage.setItem("token", res.data.payload);
